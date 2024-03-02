@@ -29,7 +29,7 @@ bedrock = session.client(
 
 bedrock_model_id = "ai21.j2-ultra-v1" #set the foundation model
 
-prompt = "What is the largest city in New Hampshire?" #the prompt to send to the model
+prompt = "How do I take care of a plant?" #the prompt to send to the model
 
 body = json.dumps({
     "prompt": prompt, #AI21
