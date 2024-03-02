@@ -5,15 +5,6 @@ import boto3
 
 session = boto3.session.Session()
 AWS_REGION = session.region_name
-from langchain.llms.bedrock import Bedrock
-
-# llm = Bedrock(
-#         region_name = AWS_REGION,
-#         model_kwargs={"max_tokens_to_sample":500,"temperature":0.95,"top_k":250,"top_p":0.999,"anthropic_version":"bedrock-2023-05-31"},
-#         model_id="anthropic.claude-v2"
-#     )
-
-# creates Bedrock client
 
 session = boto3.Session(
     profile_name=os.environ.get("BWB_PROFILE_NAME")
@@ -41,14 +32,25 @@ body = json.dumps({
     "anthropic_version": "bedrock-2023-05-31"
 }) #build the request payload
 
-# call API
+prompt = "Human: How do I take care of a plant?\Assistant:" #the prompt to send to the model
 
-response = bedrock.invoke_model(body=body, modelId=bedrock_model_id, accept='application/json', contentType='application/json') #send the payload to Bedrock
+body_bedrock = json.dumps({
+    "prompt": prompt,
+    "max_tokens_to_sample": 300,
+    "temperature": 0.5,
+    "top_k":250,
+    "top_p":1,
+    "stop_sequences": []
+}) 
 
-# display response
+response = bedrock.invoke_model(
+    body = body_bedrock,
+    contentType='application/json',
+    accept='application/json',
+    modelId= bedrock_model_id
+)
 
-response_body = json.loads(response.get('body').read()) # read the response
+response_body = json.loads(response.get('body').read()) 
 
 response_text = response_body.get("completion")#.get("data").get("text") #extract the text from the JSON response
 
-print(response_text)
