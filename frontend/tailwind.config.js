@@ -12,9 +12,6 @@ export default {
       fontFamily: {
         "title": ["Gluten"],
       },
-      fontWeight: {
-        "title": 500
-      },
       fontSize: {
         "title": ["7rem", {
           letterSpacing: "-0.01em"

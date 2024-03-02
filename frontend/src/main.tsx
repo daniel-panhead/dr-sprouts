@@ -4,8 +4,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Home from "./Home.tsx"
-import Chat from "./Chat.tsx"
+import Home from "./pages/Home.tsx"
+import Chat from "./pages/Chat.tsx"
 import './index.css'
 
 const router = createBrowserRouter([
@@ -21,6 +21,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <div className="flex flex-col h-full">
+      <RouterProvider router={router} />
+    </div>
   </React.StrictMode>
 )
