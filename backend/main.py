@@ -1,7 +1,4 @@
 from fastapi import FastAPI
-import titan
-
-text = titan.response
 
 app = FastAPI()
 
