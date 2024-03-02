@@ -1,10 +1,17 @@
 import { FormEvent, useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [symptoms, setSymptoms] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    navigate("/chat", {
+      state: {
+        initialQuery: symptoms
+      }
+    })
   }
 
   return (
