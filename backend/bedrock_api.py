@@ -50,8 +50,6 @@ def run_chatbot(information):
 
 # response_body = json.loads(response.get('body').read()) 
 
-print (run_chatbot("how is the weather today?"))
-
 # def response():
 #     return response_body.get("completion")
 
