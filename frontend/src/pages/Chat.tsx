@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import ImageDiagnosisSection from "../components/ImageDiagnosisSection";
 import Logo from "../assets/logo.png"
 import { useEffect, useState } from "react";
-import SpeakingAvatar from "../assets/speaking_avatar_actual.png";
 import StandingAvatar from "../assets/standing_avatar_actual.png";
 import ChatSection from "../components/ChatSection";
 
