@@ -1,8 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import ImageDiagnosisSection from "../components/ImageDiagnosisSection";
-import ChatSection from "../components/ChatSection";
 import Logo from "../assets/logo.png"
 import { useEffect, useState } from "react";
+import SpeakingAvatar from "../assets/speaking_avatar_actual.png";
+import StandingAvatar from "../assets/standing_avatar_actual.png";
+import ChatSection from "../components/ChatSection";
 
 const Chat = () => {
   const [initialQuery, setInitialQuery] = useState("");
@@ -24,7 +26,9 @@ const Chat = () => {
       <div className="flex flex-col items-center p-10 pt-0 flex-grow">
         <h2 className="text-subtitle mb-6">What's wrong with your plant?</h2>
         <div className="flex gap-x-8 w-full h-full">
-          <ImageDiagnosisSection />
+          <div className="flex items-end flex-grow-0">
+            <img src={StandingAvatar} alt="" className="w-14" />
+          </div>
           <ChatSection initialQuery={initialQuery} />
         </div>
       </div>
