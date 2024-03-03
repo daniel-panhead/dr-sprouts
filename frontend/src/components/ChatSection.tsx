@@ -20,7 +20,9 @@ const ChatSection = ({ initialQuery }: {initialQuery: string}) => {
     ])
   }
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (currentQuery != "") {
       addMessageToHistory(currentQuery, true);
       const currentQueryCopy = (' ' + currentQuery).slice(1);
@@ -39,7 +41,7 @@ const ChatSection = ({ initialQuery }: {initialQuery: string}) => {
       body: JSON.stringify({response: currentQuery})
     })
     const response = await result.json();
-    
+    console.log(response.message)
     addMessageToHistory(response.message, false);
   }, []);
 

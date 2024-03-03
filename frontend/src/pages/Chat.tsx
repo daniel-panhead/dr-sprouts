@@ -9,11 +9,11 @@ const Chat = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const passedInitialQuery = location.state?.initialQuery;
+    const passedInitialQuery = location.state ? location.state?.initialQuery : "";
     if (passedInitialQuery != "" && initialQuery == "") {
       setInitialQuery(passedInitialQuery);
     }
-  }, [location.state.initialQuery, setInitialQuery, initialQuery]);
+  }, [location.state, setInitialQuery, initialQuery]);
 
   return (
     <>
