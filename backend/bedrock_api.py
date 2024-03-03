@@ -16,28 +16,42 @@ bedrock = session.client(
     endpoint_url=os.environ.get("BWB_ENDPOINT_URL")
 ) 
 
-
 bedrock_model_id = "anthropic.claude-v2:1" 
 
-prompt = "Human: How do I take care of a plant?\Assistant:" #the prompt to send to the model
+def user_input(input):
+    return "Human: " + input + " ?\nAssistant:"
 
-body_bedrock = json.dumps({
-    "prompt": prompt,
-    "max_tokens_to_sample": 300,
-    "temperature": 0.5,
-    "top_k":250,
-    "top_p":1,
-    "stop_sequences": []
-}) 
 
-response = bedrock.invoke_model(
-    body = body_bedrock,
-    contentType='application/json',
-    accept='application/json',
-    modelId= bedrock_model_id
-)
+# body_bedrock = json.dumps({
+#     "prompt": user_input(),
+#     "max_tokens_to_sample": 300,
+#     "temperature": 0.5,
+#     "top_k":250,
+#     "top_p":1,
+#     "stop_sequences": []
+# }) 
 
-response_body = json.loads(response.get('body').read()) 
+def run_chatbot(information):
+    response = bedrock.invoke_model(
+        body = json.dumps({
+            "prompt": user_input(information),
+            "max_tokens_to_sample": 300,
+            "temperature": 0.5,
+            "top_k":250,
+            "top_p":1,
+            "stop_sequences": []
+        }),
+        contentType='application/json',
+        accept='application/json',
+        modelId= bedrock_model_id
+    )
+    json_text = json.loads(response.get('body').read()) 
+    return json_text.get("completion")
 
-response_text = response_body.get("completion")
+# response_body = json.loads(response.get('body').read()) 
+
+print (run_chatbot("how is the weather today?"))
+
+# def response():
+#     return response_body.get("completion")
 
