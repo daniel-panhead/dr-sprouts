@@ -41,7 +41,7 @@ def run_chatbot(information):
             modelId= bedrock_model_id
         )
         json_text = json.loads(response.get('body').read()) 
-        result = json_text.get("completion")
+        result = "Sorry, there is nothing in our scientific data but here's what we found elsewhere: \n\n" + json_text.get("completion")
         
     else :
         result = rag_response
