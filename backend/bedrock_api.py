@@ -21,30 +21,36 @@ def user_input(input):
     return "Human: " + input + " ?\nAssistant:"
 
 
+# body_bedrock = json.dumps({
+#     "prompt": user_input(),
+#     "max_tokens_to_sample": 300,
+#     "temperature": 0.5,
+#     "top_k":250,
+#     "top_p":1,
+#     "stop_sequences": []
+# }) 
+
 def run_chatbot(information):
+    response = bedrock.invoke_model(
+        body = json.dumps({
+            "prompt": user_input(information),
+            "max_tokens_to_sample": 300,
+            "temperature": 0.5,
+            "top_k":250,
+            "top_p":1,
+            "stop_sequences": []
+        }),
+        contentType='application/json',
+        accept='application/json',
+        modelId= bedrock_model_id
+    )
+    json_text = json.loads(response.get('body').read()) 
+    return json_text.get("completion")
 
-    rag_response = run_chatbot2(information)
-    result = ""
+# response_body = json.loads(response.get('body').read()) 
 
-    if (rag_response == "No") :
-        response = bedrock.invoke_model(
-            body = json.dumps({
-                "prompt": user_input(information),
-                "max_tokens_to_sample": 300,
-                "temperature": 0.5,
-                "top_k":250,
-                "top_p":1,
-                "stop_sequences": []
-            }),
-            contentType='application/json',
-            accept='application/json',
-            modelId= bedrock_model_id
-        )
-        json_text = json.loads(response.get('body').read()) 
-        result = "We couldn't find specific information in our scientific data, however we did find: \n\n" + json_text.get("completion")
-        
-    else :
-        result = rag_response
+# def response():
+#     return response_body.get("completion")
 
     return result
 
@@ -100,4 +106,4 @@ def run_chatbot2(information):
 #     print(response_rag)
 # }
 
-print (run_chatbot("Why is my plant yellow?"))
+#print (run_chatbot("Why is my plant yellow?"))
