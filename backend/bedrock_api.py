@@ -1,4 +1,3 @@
-# allows call to Bedrock
 import os
 import json
 import boto3
@@ -16,41 +15,89 @@ bedrock = session.client(
     endpoint_url=os.environ.get("BWB_ENDPOINT_URL")
 ) 
 
-# build payload for ID call
+bedrock_model_id = "anthropic.claude-v2:1" 
 
-bedrock_model_id = "anthropic.claude-v2:1" #set the foundation model
+def user_input(input):
+    return "Human: " + input + " ?\nAssistant:"
 
-prompt = "Human: How do I take care of a plant?\nAssistant:" #the prompt to send to the model
 
-body = json.dumps({
-    "prompt": prompt, #Anthropic Claude
-    "max_tokens_to_sample": 300,
-    "temperature":0.5,
-    "top_k":250,
-    "top_p":1,
-    "stop_sequences":[],
-    "anthropic_version": "bedrock-2023-05-31"
-}) #build the request payload
+def run_chatbot(information):
 
-prompt = "Human: How do I take care of a plant?\Assistant:" #the prompt to send to the model
+    rag_response = run_chatbot2(information)
+    result = ""
 
-body_bedrock = json.dumps({
-    "prompt": prompt,
-    "max_tokens_to_sample": 300,
-    "temperature": 0.5,
-    "top_k":250,
-    "top_p":1,
-    "stop_sequences": []
-}) 
+    if (rag_response == "No") :
+        response = bedrock.invoke_model(
+            body = json.dumps({
+                "prompt": user_input(information),
+                "max_tokens_to_sample": 300,
+                "temperature": 0.5,
+                "top_k":250,
+                "top_p":1,
+                "stop_sequences": []
+            }),
+            contentType='application/json',
+            accept='application/json',
+            modelId= bedrock_model_id
+        )
+        json_text = json.loads(response.get('body').read()) 
+        result = "We couldn't find specific information in our scientific data, however we did find: \n\n" + json_text.get("completion")
+        
+    else :
+        result = rag_response
 
-response = bedrock.invoke_model(
-    body = body_bedrock,
-    contentType='application/json',
-    accept='application/json',
-    modelId= bedrock_model_id
-)
+    return result
 
-response_body = json.loads(response.get('body').read()) 
 
-response_text = response_body.get("completion")#.get("data").get("text") #extract the text from the JSON response
+client = boto3.client('bedrock-agent-runtime')
 
+def retrieveAndGenerate(prompt, kbId):
+    return client.retrieve_and_generate(
+        input={
+            'text': prompt
+        },
+        retrieveAndGenerateConfiguration={
+            'type': 'KNOWLEDGE_BASE',
+            'knowledgeBaseConfiguration': {
+                'knowledgeBaseId': kbId,
+                'modelArn': 'arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-v2'
+
+                }
+            }
+        )
+
+
+def run_chatbot2(information):
+    return retrieveAndGenerate(information + "If you can't find anything say: 'No'", "M1Y52VVEIM")["output"]["text"]
+
+
+# if (response_rag == "No") {
+
+#     bedrock_model_id = "anthropic.claude-v2:1" #set the foundation model
+
+#     body_bedrock = json.dumps({
+#         "prompt": prompt, #Anthropic Claude
+#         "max_tokens_to_sample": 300,
+#         "temperature":0.5,
+#         "top_k":250,
+#         "top_p":1,
+#         "stop_sequences":[],
+#         "anthropic_version": "bedrock-2023-05-31"
+#     }) #build the request payload
+
+#     response = bedrock.invoke_model(
+#         body = body_bedrock,
+#         contentType='application/json',
+#         accept='application/json',
+#         modelId= bedrock_model_id
+#     )
+
+#     response_body = json.loads(response.get('body').read()) 
+
+#     response_text = response_body.get("completion")#.get("data").get("text") #extract the text from the JSON response
+
+# } else {
+#     print(response_rag)
+# }
+
+print (run_chatbot("Why is my plant yellow?"))
