@@ -10,14 +10,14 @@ const ChatBubble = ({message, time, userSent}: ChatMessage) => {
   const [showTimestamp, setShowTimestamp] = useState(false);
 
   return (
-    <div
-      className={`chat ${userSent ? "chat-end" : "chat-start"}`}
-      onClick={() => setShowTimestamp(!showTimestamp)}
-    >
+    <div className={`chat ${userSent ? "chat-end" : "chat-start"}`}>
       {showTimestamp &&
         <span className="chat-header opacity-50">{time.toLocaleTimeString()}</span>
       }
-      <div className={`chat-bubble hover:brightness-95 active:brightness-90 transition-all ${userSent ? "chat-bubble-secondary" : "chat-bubble-primary"}`}>
+      <div
+        className={`chat-bubble hover:brightness-95 active:brightness-90 transition-all ${userSent ? "chat-bubble-secondary" : "chat-bubble-primary"}`}
+        onClick={() => setShowTimestamp(!showTimestamp)}
+      >
         {message}
       </div>
     </div>
