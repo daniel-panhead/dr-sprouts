@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import ChatConversation, { ChatHistory } from './ChatConversation'
-import { useLocation } from 'react-router-dom';
 
 const ChatSection = ({ initialQuery }: {initialQuery: string}) => {
   const [chatHistory, setChatHistory] = useState<ChatHistory>([]);
   const [currentQuery, setCurrentQuery] = useState("");
+  const [submitted, setSubmitted] = useState<Date>(new Date());
 
   const addMessageToHistory = (
     newMessage: string,
@@ -17,7 +17,8 @@ const ChatSection = ({ initialQuery }: {initialQuery: string}) => {
         time: new Date(),
         userSent
       }
-    ])
+    ]);
+    setSubmitted(new Date());
   }
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -54,7 +55,7 @@ const ChatSection = ({ initialQuery }: {initialQuery: string}) => {
 
   return (
     <div className="flex flex-col basis-3/4 gap-y-6 flex-grow items-center">
-      <ChatConversation chatHistory={chatHistory} />
+      <ChatConversation chatHistory={chatHistory} submitted={submitted} />
       <form className="flex w-full" onSubmit={handleSendMessage}>
         <input
           type="text"
